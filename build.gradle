@@ -1,0 +1,29 @@
+group 'com.github.piasy'
+version '1.0.0'
+
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+  }
+  dependencies {
+    classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+  }
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: "com.github.johnrengelman.shadow"
+
+mainClassName = 'com.github.piasy.sqldelight.bin.SqlDelightRunner'
+
+sourceCompatibility = 1.8
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile group: 'com.squareup.sqldelight', name: 'compiler', version: '0.4.2'
+}
