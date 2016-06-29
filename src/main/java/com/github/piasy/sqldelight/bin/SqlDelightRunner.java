@@ -22,7 +22,9 @@ import org.antlr.v4.runtime.CommonTokenStream;
  */
 public class SqlDelightRunner {
   public static void main(String[] argv) {
-    File inputDir = new File(argv[0]);
+    String input = argv[0];
+    String output = argv[1];
+    File inputDir = new File(input);
     for (File sq : listAllFiles(inputDir)) {
       System.out.println("compiling " + sq.getAbsolutePath() + " ...");
       try {
@@ -43,7 +45,7 @@ public class SqlDelightRunner {
           System.exit(1);
         } else {
           List<QueryResults> queries = ((Status.ValidationStatus.Validated) status).getQueries();
-          SqliteCompiler.Companion.write(parseContext, queries, relativePath, ".");
+          SqliteCompiler.Companion.write(parseContext, queries, relativePath, output);
         }
       } catch (IOException e) {
         e.printStackTrace();
