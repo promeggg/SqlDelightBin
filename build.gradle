@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 group 'com.github.okbuilds'
 version '1.0.0'
 
@@ -6,18 +8,25 @@ buildscript {
     maven {
       url "https://plugins.gradle.org/m2/"
     }
+    jcenter()
   }
   dependencies {
     classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
+    classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
   }
 }
 
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: "com.github.johnrengelman.shadow"
 
 mainClassName = 'com.github.piasy.sqldelight.bin.SqlDelightRunner'
+
+shadowJar {
+  classifier = null
+}
 
 sourceCompatibility = 1.8
 
@@ -29,15 +38,70 @@ dependencies {
   compile group: 'com.squareup.sqldelight', name: 'compiler', version: '0.4.2'
 }
 
+tasks.withType(JavaCompile) {
+  sourceCompatibility = '1.8'
+  targetCompatibility = '1.8'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+  classifier = 'javadoc'
+  from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+  from sourceSets.main.allSource
+  classifier = 'sources'
+}
+def siteUrl = 'https://github.com/OkBuilds/SqlDelightBin'
+def gitUrl = 'https://github.com/OkBuilds/SqlDelightBin.git'
+def publishGroup = 'com.github.okbuilds'
+def publishVersion = '1.0.0'
+
+group = publishGroup
+version = publishVersion
+
+Properties properties = new Properties()
+// for wrapper project structure
+File propertyFile = project.rootProject.file('bintray.properties')
+if (propertyFile.exists()) {
+  properties.load(propertyFile.newDataInputStream())
+}
+
 publishing {
   publications {
-    shadow(MavenPublication) {
+    mavenJava(MavenPublication) {
       from components.shadow
-    }
-  }
-  repositories {
-    maven {
-      url "http://repo.myorg.com"
+
+      artifact sourcesJar
+      artifact javadocJar
+
+      artifactId 'SqlDelightBin'
     }
   }
 }
+
+bintray {
+  user = project.properties.get("bintray.user", properties.getProperty("bintray.user"))
+  key = project.properties.get("bintray.apikey", properties.getProperty("bintray.apikey"))
+  publications = ['mavenJava']
+  dryRun = false
+  publish = true
+  pkg {
+    repo = 'maven'
+    name = 'SqlDelightBin'
+    userOrg = 'okbuild'
+    desc = 'A runnable jar that uses SqlDelight-Compiler to compile SQL into Java.'
+    websiteUrl = siteUrl
+    issueTrackerUrl = siteUrl + '/issues'
+    vcsUrl = gitUrl
+    licenses = ['MIT']
+    labels = ['SqlDelight']
+    publicDownloadNumbers = true
+    version {
+      name = publishVersion
+      released = new SimpleDateFormat('yyyy-MM-dd\'T\'HH:mm:ss.SSSZZ').format(new Date())
+      vcsTag = publishVersion
+    }
+  }
+}
+
