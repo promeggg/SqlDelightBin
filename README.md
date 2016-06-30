@@ -4,8 +4,7 @@ A runnable jar that uses SqlDelight-Compiler to compile SQL into Java.
 
 ## Usage
 
-1. `cd` into the module root directory, generally is the parent directory of `src`;
-2. put your `*.sq` inside `src/main/sqldelight` (it's stronly recommended that you
+1. put your `*.sq` inside `src/main/sqldelight` (it's stronly recommended that you
 use the official SqlDelight gradle plugin to debug your SQL statements first);
-3. run `java -jar <path to SqlDelightBin jar> src/main/sqldelight`, the generated
-Java file will be in `build/generated/source/sqldelight/` dir;
+3. run `java -jar <path to SqlDelightBin jar> <path to src/main/sqldelight> <output dir>`, the generated
+Java file will be in `<output dir>/build/generated/source/sqldelight/` dir;

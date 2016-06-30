@@ -1,4 +1,4 @@
-group 'com.github.piasy'
+group 'com.github.okbuilds'
 version '1.0.0'
 
 buildscript {
@@ -14,6 +14,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'application'
+apply plugin: 'maven-publish'
 apply plugin: "com.github.johnrengelman.shadow"
 
 mainClassName = 'com.github.piasy.sqldelight.bin.SqlDelightRunner'
@@ -26,4 +27,17 @@ repositories {
 
 dependencies {
   compile group: 'com.squareup.sqldelight', name: 'compiler', version: '0.4.2'
+}
+
+publishing {
+  publications {
+    shadow(MavenPublication) {
+      from components.shadow
+    }
+  }
+  repositories {
+    maven {
+      url "http://repo.myorg.com"
+    }
+  }
 }
