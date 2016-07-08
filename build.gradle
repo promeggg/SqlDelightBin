@@ -1,7 +1,9 @@
 import java.text.SimpleDateFormat
 
-group 'com.github.okbuilds'
-version '1.0.0'
+def siteUrl = 'https://github.com/OkBuilds/SqlDelightBin'
+def gitUrl = 'https://github.com/OkBuilds/SqlDelightBin.git'
+def publishGroup = 'com.github.okbuilds'
+def publishVersion = '0.4.3'
 
 buildscript {
   repositories {
@@ -35,7 +37,7 @@ repositories {
 }
 
 dependencies {
-  compile group: 'com.squareup.sqldelight', name: 'compiler', version: '0.4.2'
+  compile group: 'com.squareup.sqldelight', name: 'compiler', version: "${publishVersion}"
 }
 
 tasks.withType(JavaCompile) {
@@ -52,10 +54,6 @@ task sourcesJar(type: Jar) {
   from sourceSets.main.allSource
   classifier = 'sources'
 }
-def siteUrl = 'https://github.com/OkBuilds/SqlDelightBin'
-def gitUrl = 'https://github.com/OkBuilds/SqlDelightBin.git'
-def publishGroup = 'com.github.okbuilds'
-def publishVersion = '1.0.0'
 
 group = publishGroup
 version = publishVersion
